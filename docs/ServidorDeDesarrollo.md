@@ -326,14 +326,14 @@ sudo ufw status numbered # Comprobar el número del puerto 443(v6)
 sudo ufw delete (nº)
 ```
 
-**Redirección de http a https**     
-**Para el usuario administrador**
+**Redirección de http a https**        
+**Para el usuario administrador**    
 Se debe modificar el archivo 000-default.conf
 ``` bash
 sudo nano /etc/apache2/sites-available/000-default.conf
 ```
 
-Dentro del bloque de VirtualHost 80 se debe poner la siguiente linea
+Dentro del bloque de VirtualHost 80 se debe poner la siguiente linea   
 ``` bash
 Redirect permanent / https://10.199.8.153/
 
@@ -341,7 +341,7 @@ sudo systemctl restart apache2 # Reiniciamos Apache2
 ```
 Se guarda el archivo
 
-**Para alguien no administrador**
+**Para alguien no administrador**   
 Otra forma de hacerlo sería modificar el archivo de configuración de Apache
 ``` bash
 sudo nano /etc/apache2/apache2.conf
