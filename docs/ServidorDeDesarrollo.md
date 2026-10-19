@@ -327,6 +327,7 @@ sudo ufw delete (nº)
 ```
 
 **Redirección de http a https**     
+**Para el usuario administrador**
 Se debe modificar el archivo 000-default.conf
 ``` bash
 sudo nano /etc/apache2/sites-available/000-default.conf
@@ -339,6 +340,24 @@ Redirect permanent / https://10.199.8.153/
 sudo systemctl restart apache2 # Reiniciamos Apache2
 ```
 Se guarda el archivo
+
+**Para alguien no administrador**
+Otra forma de hacerlo sería modificar el archivo de configuración de Apache
+``` bash
+sudo nano /etc/apache2/apache2.conf
+```
+Busca las lineas que modifican el directorio var/www y en AllowOverride cambia None por All   
+Para quitar un aviso más adelante entramos a la configuración del sitio y añadimos un ServerName con el nombre del server
+``` bash
+sudo nano /etc/apache2/sites-available/000-default.conf
+
+ServerName acp-used
+
+sudo apache2ctl configtest # Revisamos que la sintaxis esté bien(aquí daba el aviso)
+
+sudo systemctl restart apache2
+```
+
 
 **Consejo**
 Al entrar con un navegador al servidor, nos indica que no es seguro debido a que la autoridad certificadora no es segura.
