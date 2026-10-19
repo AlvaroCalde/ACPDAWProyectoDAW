@@ -14,8 +14,6 @@
     - [Permisos y usuarios](#permisos-y-usuarios)
     - [Protocolo HTTPS](#protocolo-https)
     - [Instalación](#instalación-1)
-    - [Configuración de Apache2 con PHP-FPM](#configuración-de-apache2-con-php-fpm)
-    - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
     - [Configuración del php.ini para un entorno de desarrollo.](#configuración-del-phpini-para-un-entorno-de-desarrollo)
   - [1.4 MariaDB](#14-mariadb)
       - [Instalación y configuración de MariaDB](#instalación-y-configuración-de-mariadb)
@@ -32,7 +30,7 @@
 
 #### Configuración inicial
 **Configuración principal**
-> **Nombre de la máquina**: acp-uslimpia\
+> **Nombre de la máquina**: acp-used\
 > **Memoria RAM**: 2G\
 > **Particiones**: 150G(/) y resto (350GB) (/var)\
 > **Configuración de red interface**: xxxx \
@@ -287,6 +285,9 @@ garantizando confidencialidad, integridad y autenticación de los datos.
 **Instalación**
 Generar clave privada SSL
 ```bash
+# Habilitamos el módulo ssl
+sudo a2enmod ssl
+
 # Generamos la solicitud de certificado.
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/acp-used.key -out /etc/ssl/certs/acp-used.crt
 
@@ -325,6 +326,20 @@ sudo ufw status numbered # Comprobar el número del puerto 443(v6)
 sudo ufw delete (nº)
 ```
 
+**Redirección de http a https**     
+Se debe modificar el archivo 000-default.conf
+``` bash
+sudo nano /etc/apache2/sites-available/000-default.conf
+```
+
+Dentro del bloque de VirtualHost 80 se debe poner la siguiente linea
+``` bash
+Redirect permanent / https://10.199.8.153/
+
+sudo systemctl restart apache2 # Reiniciamos Apache2
+```
+Se guarda el archivo
+
 **Consejo**
 Al entrar con un navegador al servidor, nos indica que no es seguro debido a que la autoridad certificadora no es segura.
 El certificado es autofirmado por el usuario, en este caso yo, y no es de confianza para el navegador. Esto se puede se puede resolver
@@ -355,28 +370,6 @@ phpinfo();
 Entramos en nuestra página principal y escribimos en la barra de busqueda:
 http://direccionip/info.php. Nos debería de salir una página como esta.
 
-#### Configuración de Apache2 con PHP-FPM
-Para habilitar los modulos Proxy-FCGI y SetEnvif
-
-```bash
-sudo a2enmod proxy-fcgi setenvif
-```
-
-#### Activarlo para todos los virtualhost
-El fichero de configuración php8.3-fpm en el directorio /etc/apache2/conf-available, por defecto funciona cuando php-fpm está escuchando en un socket UNIX Se configura de la siguiente forma:
-
-Se abre el fichero /etc/apache2/conf-available/php8.3-fpm.conf
-```bash
-sudo nano /etc/apache2/conf-available/php8.5-fpm.conf
-```
-
-Y se copia esto o se comprueba si ya está:
-```bash
- <FilesMatch ".+\.ph(?:ar|p|tml)$">
-    SetHandler "proxy:unix:/run/php/php8.5-fpm.sock|fcgi://localhost"
-</FilesMatch>
-```
-
 Por último activamos (o comprobamos que esta activado) y se recarga apache2:
 ```bash
 sudo a2enconf php8.5-fpm
@@ -390,7 +383,7 @@ sudo a2disconf php8.5-fpm
 Primero se hace una copia del archivo.  
 ```bash
 cd /etc/php/8.5/fpm/
-sudo cp php.ini php.ini.bk2025
+sudo cp php.ini php.ini.bk2026
 sudo nano php.ini
 ```
 
@@ -431,7 +424,7 @@ un límite máximo de memoria que puede usar un archivo PHP.
 Una vez explicado vamos a ir paso por paso detallando como aplicar esta configuración:
 
 Una vez instalado PHP y comprobado que nos funciona el info.php entramos en el directorio
-/etc/php/8.3/fpm donde encontraremos el archivo de configuración php.ini.
+/etc/php/8.5/fpm donde encontraremos el archivo de configuración php.ini.
 ```bash
 cd /etc/php/8.5/fpm
 
@@ -497,38 +490,6 @@ Para iniciar el servicio en modo comando, nos iniciará sin autenticar ningún u
 | Deshabilitar inicio automático | `sudo systemctl disable mariadb` | Evita que el servicio se inicie automáticamente.             |
 | Ver versión instalada          | `mariadb --version`              | Muestra la versión actual de MariaDB instalada.              |
 
-**Instalación de módulos**\
-Todo esto se puede realizar previo a instalar el mysql ya que esto es una configuración de PHP.
-Modelo php8.3-mysql es la extensión que permite a PHP conectarse con el servidor de bases de datos.
-```bash
-sudo apt install php8.5-mysql
-sudo apt install php8.5-intl           # Extensión de internalización básica para SQL.
-```
-Ahora se listan los módulos mediante el siguiente comando (este paso se debe realizar previo a la instalación y después):
-```bash
-sudo php -m | grep mysql
-# Si se realiza antes de instalar los módulos debería de aparecer vacio.
-# En caso de hacerlo después apareceran varios módulos: mysqli, mysqlnd, pdo_mysql.
-``` 
-**----------------------**
-
-**Conexión con NetBeans**\
-Para conectar el NetBeans a la base de datos debemos de descargar el driver necesario:
-mariadb-java-cliente-3.5.6.
-
-Una vez descargado y guardado en una carpeta llamada lib entraremos en NetBeans e iremos al apartado 'Services'>'Databases'
-Haremos click derecho donde pone 'MariaDB(MySQL-compatible)' y se nos abrirá una pestaña de conexión.
-En esta pestaña añadiremos el driver descargado y continuaremos a efectuar la conexión.
-En cada apartado pondremos lo siguiente:
-**Host:** 10.199.11.90 (ip de la máquina)
-**Port:** 3306
-**Database:** se puede dejar vacio o introducir uno cual sea.
-**User Name:** adminsql
-**Password:** paso
-
-Antes de continuar con la conexión podemos testearla para confirmar que funciona.
-Por último decidimos el nombre de la conexión para facilitarnos su uso y aceptamos.
-Ya podemos realizar todas las operaciones que el usuario introducido puede hacer con los permisos que tenga.
 #### Consola de MariaDB
 Se entra al cliente:
 
@@ -580,10 +541,10 @@ GRANT ALL ON *.* TO 'adminsql'@'%' IDENTIFIED BY 'paso' WITH GRANT OPTION;
 SELECT User, Host FROM mysql.user;
 ```
 
-Conectarse de forma remota con el nuevo usuario: (fuera del cliente MariaDB)
+Prueba de conexión con el nuevo usuario
 
 ```bash
-mariadb -u adminsql -p -h your_server_ip
+mariadb -u adminsql -p 
 ```
 
 ---
@@ -593,7 +554,7 @@ mariadb -u adminsql -p -h your_server_ip
 Se ejecuta el script de seguridad:
 
 ```bash
-sudo mariadb_secure_installation
+sudo mariadb-secure-installation
 ```
 
 Este asistente te permitirá:
@@ -616,7 +577,6 @@ Este asistente te permitirá:
 ### 1.5 PHPMyadmin
 
 #### Instalación
-* Enlace tutorial :https://www.devtutorial.io/how-to-install-phpmyadmin-with-apache-on-ubuntu-24-04-p3467.html
 
 * Se actualiza el servidor
 ```bash
@@ -627,5 +587,21 @@ sudo apt upgrade
 ```bash
 sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 ```
+Para comprobar que funciona pega esto en el navegador cambiando IP por la IP del servidor http://IP/phpmyadmin
 
+**Conexión con NetBeans**\
+Ve a la pestaña services, click derecho en databases>New connection elige mariadb y pon el driver que se puede descargar aquí
+https://dbschema.com/jdbc-driver/mariadb.html?srsltid=AU7gw4UWnA-b2npz9c4sMytfK6tYh_UTAg6pUr4ddLELS1TDDtim9ulA
 
+Al dar a next en el host pones la ip del servidor y en el user name y password pones los datos de adminsql
+
+Debes permitir el puerto 3306 en el cortafuegos y borras el V6
+``` bash 
+sudo ufw allow 3306
+```
+Das a next 2 veces y le das el nombre que quieras a la conexión
+
+**Conexión con Visual Studio Code**\
+Debes instalar la extensión de MySQL y se añadirá una nueva pestaña lateral, haz click en esa pestaña y elige la opción de MariaDB.   
+Rellena los campos y ya está.   
+En el campo Group puedes poner lo que quieras, es para organizar a tu gusto la disposición de las conexiones.   
