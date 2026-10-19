@@ -1,26 +1,32 @@
 - [1. Servidor de Desarrollo](#1-servidor-de-desarrollo)
-  - [1.1 Ubuntu Server 26.04.1 LTS](#11-ubuntu-server-26041-lts)
-    - [Configuración inicial](#configuración-inicial)
-    - [Nombre y configuración de red](#nombre-y-configuración-de-red)
-    - [Actualizar el sistema](#actualizar-el-sistema)
-    - [Configuración de fecha y hora](#configuración-de-fecha-y-hora)
-    - [Cuentas administradoras](#cuentas-administradoras)
-    - [Habilitar cortafuegos](#habilitar-cortafuegos)
-    - [Instalar antivirus](#instalar-antivirus)
-    - [Comprobar conexión](#comprobar-conexión)
-  - [1.2 Apache HTTP](#12-apache-http)
-    - [Instalación](#instalación)
-    - [Verficación del servicio](#verficación-del-servicio)
-    - [Permisos y usuarios](#permisos-y-usuarios)
-    - [Protocolo HTTPS](#protocolo-https)
-    - [Instalación](#instalación-1)
-    - [Configuración del php.ini para un entorno de desarrollo.](#configuración-del-phpini-para-un-entorno-de-desarrollo)
-  - [1.4 MariaDB](#14-mariadb)
-      - [Instalación y configuración de MariaDB](#instalación-y-configuración-de-mariadb)
-    - [Consola de MariaDB](#consola-de-mariadb)
-    - [Creación de un usuario administrador](#creación-de-un-usuario-administrador)
-  - [1.5 PHPMyadmin](#15-phpmyadmin)
-    - [Instalación](#instalación-2)
+    - [1.1 Ubuntu Server 24.04.3 LTS](#11-ubuntu-server-24043-lts)
+        - [Configuración inicial](#configuracion-inicial)
+        - [Nombre y configuración de red](#nombre-y-configuracion-de-red)
+        - [Actualizar el sistema](#actualizar-el-sistema)
+        - [Configuración fecha y hora](#configuracion-fecha-y-hora)
+        - [Cuentas administradoras](#cuentas-administradoras)
+        - [Habilitar cortafuegos](#habilitar-cortafuegos)
+        - [Instalar Antivirus](#instalar-antivirus)
+        - [Comprobar conexión](#comprobar-conexion)
+    - [1.2 Apache HTTP](#12-Apache-HTTP)
+        - [Instalación](#instalación)
+        - [Verificación del servicio](#verificacion-del-servicio)
+        - [Permisos y usuarios](#permisos-y-usuarios)
+        - [Conexión segura (HTTPS)](#protocolo-https)
+        - [Redirección a HTTPS](#redireccion-a-https)
+        - [Módulos de Apache instalados](#modelos-de-apache-instalados)
+    - [1.3 Ejecución PHP con PHP-FPM](#13-ejecucion-php-con-php-fpm)
+        - [Instalación](#instalacion)
+        - [Configuración de Apache2 con PHP-FPM](#configuracion-de-apache2-con-php-fpm)
+        - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
+        - [Configuración del php.ini para un entorno de desarrollo](#configuracion-del-php-ini-para-un-entorno-de-desarrollo)
+        - [Comprobación de funcionamiento PHP-FPM](#comprobacion-de-funcionamiento-php-fpm)
+    - [1.4 MariaDB](#14-mariadb)
+        - [Instalación y configuración de MariaDB](#instalacion-y-configuracion-de-mariadb)
+        - [Consola de MariaDB](#consola-de-mariadb)
+        - [Creación de un usuario administrador](#creacion-de-un-usuario-administrador)
+    - [1.5 PHPMyadmin](#15-phpmyadmin)
+        - [Instalacion](#instalacion)
     
 
 
@@ -326,23 +332,8 @@ sudo ufw status numbered # Comprobar el número del puerto 443(v6)
 sudo ufw delete (nº)
 ```
 
-**Redirección de http a https**        
-**Para el usuario administrador**    
-Se debe modificar el archivo 000-default.conf
-``` bash
-sudo nano /etc/apache2/sites-available/000-default.conf
-```
-
-Dentro del bloque de VirtualHost 80 se debe poner la siguiente linea   
-``` bash
-Redirect permanent / https://10.199.8.153/
-
-sudo systemctl restart apache2 # Reiniciamos Apache2
-```
-Se guarda el archivo
-
-**Para alguien no administrador**   
-Otra forma de hacerlo sería modificar el archivo de configuración de Apache
+**Redirección de http a https**          
+Modificar el archivo de configuración de Apache
 ``` bash
 sudo nano /etc/apache2/apache2.conf
 ```
