@@ -278,6 +278,24 @@ sudo ufw status numbered
 sudo ufw delete 'numeropuerto'          #Borramos el puerto 80 (v6) usando su número de indetificación
 
 ```
+
+Si no se ha añadido antes el usuario operadorweb:
+
+```bash
+sudo adduser --home /var/www/html --ingroup www-data --shell /bin/bash operadorweb
+
+# Ahora debemos cambiar el dueño de la carpeta /var/www/html para que pertenezca a operadorweb
+sudo chown -R operadorweb:www-data /var/www/html            # Cambia el propietario y el grupo del directorio indicado.
+sudo chmod -R 775 /var/www/html                             # Cambia los permisos del usuario propietario, del grupo y del resto de propieatarios.
+
+# Para comprobar que los cambios han surgido efecto debemos hacer lo siguiente:
+ls -al /var/www/html
+
+drwxrwxr-x 2 operadorweb www-data  4096 oct  9 10:30 .
+drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
+-rwxrwxr-x 1 operadorweb www-data 10671 oct  9 10:30 index.html
+
+```
 #### Verficación del servicio
 
 Para verificar que Apache se ha instalado y está funcionando correctamente tenemos dos formas: entrando a un 
