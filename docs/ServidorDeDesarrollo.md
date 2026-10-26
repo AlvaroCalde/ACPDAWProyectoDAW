@@ -5,22 +5,27 @@
     - [Actualizar el sistema](#actualizar-el-sistema)
     - [Configuración de fecha y hora](#configuración-de-fecha-y-hora)
     - [Cuentas administradoras](#cuentas-administradoras)
-    - [Habilitar cortafuegos](#habilitar-cortafuegos)
+    - [Cuentas desarrolladoras](#cuentas-desarrolladoras)
+  - [1.2 UFW](#1.2_UFW)
+    - [Instalar cortafuegos](#instalar-cortafuegos)
     - [Instalar antivirus](#instalar-antivirus)
+  - [1.3 SSH](#1.3_SSH)
+    - [Instalar SSH](#instalar-SSH)
     - [Comprobar conexión](#comprobar-conexión)
-  - [1.2 Apache HTTP](#12-apache-http)
+  - [1.4 Apache HTTP](#14-apache-http)
     - [Instalación](#instalación)
     - [Verficación del servicio](#verficación-del-servicio)
-    - [Permisos y usuarios](#permisos-y-usuarios)
+    - [Cuentas de administrador](#permisos-y-usuarios)
+    - [Cuentas de desarrollador](#permisos-y-usuarios)
     - [Protocolo HTTPS](#protocolo-https)
-  - [1.3 Ejecución PHP con PHP-FPM](#13-ejecución-php-con-php-fpm)
+  - [1.5 Ejecución PHP con PHP-FPM](#15-ejecución-php-con-php-fpm)
     - [Instalación](#instalación-1)
     - [Configuración del php.ini para un entorno de desarrollo.](#configuración-del-phpini-para-un-entorno-de-desarrollo)
-  - [1.4 MariaDB](#14-mariadb)
+  - [1.6 MariaDB](#16-mariadb)
       - [Instalación y configuración de MariaDB](#instalación-y-configuración-de-mariadb)
     - [Consola de MariaDB](#consola-de-mariadb)
     - [Creación de un usuario administrador](#creación-de-un-usuario-administrador)
-  - [1.5 PHPMyadmin](#15-phpmyadmin)
+  - [1.7 PHPMyadmin](#17-phpmyadmin)
     - [Instalación](#instalación-2)
     
 
@@ -38,6 +43,11 @@
 > **Dirección IP** :10.199.8.153/22\
 > **GW**: 10.199.8.1\
 > **DNS**: 10.151.123.21 o 10.151.126.21
+
+Para cambiar el hostname se usa: 
+```bash
+
+```
 
 Para comprobar todos estos valores debemos usar los siguientes comandos:
 ```bash
@@ -97,8 +107,6 @@ sudo timedatectl set-timezone Europe/Madrid         # En caso de querer poner la
 
 #### Cuentas administradoras 
 
-
-
 > root(inicio)\
 > miadmin/paso\  
 > miadmin2/paso
@@ -117,14 +125,38 @@ Una vez creado el usuario tenemos que darle privilegios de sudo, es decir, meter
 sudo usermod -aG sudo miadmin2          
 # Meter al usuario miadmin2 en el grupo sudo sin quitarle del resto de grupos que pertenece y -G indica los grupos suplementarios a los que quieres añadir el usuario.
 # Ahora lo que tenemos que hacer es el meter a miadmin2 en los mismos grupos que miadmin usando este comando y listando
-  con cat /etc/group | grep miadmin
+  con cat /etc/group | grep miadmin     
 
 **Comandos recomendados**
 su nombreusuario                        # Inicia sesión en el usuario indicado.
 exit                                    # Cierra la sesión actual.
 ```
-#### Habilitar cortafuegos
-**UFW**\
+
+#### Cuentas desarrolladoras 
+
+> operadorweb/paso
+> operadorweb2/paso
+> operadorweb3/paso
+
+```bash
+sudo adduser --home /var/www/html --ingroup www-data --shell /bin/bash operadorweb
+
+# Ahora debemos cambiar el dueño de la carpeta /var/www/html para que pertenezca a operadorweb
+sudo chown -R operadorweb:www-data /var/www/html            # Cambia el propietario y el grupo del directorio indicado.
+sudo chmod -R 775 /var/www/html                             # Cambia los permisos del usuario propietario, del grupo y del resto de propieatarios.
+
+# Para comprobar que los cambios han surgido efecto debemos hacer lo siguiente:
+ls -al /var/www/html
+
+drwxrwxr-x 2 operadorweb www-data  4096 oct  9 10:30 .
+drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
+-rwxrwxr-x 1 operadorweb www-data 10671 oct  9 10:30 index.html
+
+```
+
+## 1.2  UFW
+
+#### Instalar cortafuegos
 Para comprobar el estado del cortafuegos y saber si está activado o desactivado, se debe  usar el siguiente comando:
 
 ```bash
@@ -186,9 +218,9 @@ Para saber la version del antivirus
 clamscan --version
 ```
 
-#### Comprobar conexión
+## 1.3 SSH
 
-**SSH**\
+#### Instalar SSH
 El protocolo de red SSH permite controlar y modificar servidores remotos de manera segura a través de Internet.
 
 En el momento que estamos instalando el sistema operativo Ubuntu Server 26.04.1 LTS el instalador nos pregunta si queremos el servicio SSH.
@@ -216,7 +248,7 @@ sudo systemctl [start|restart] ssh
 sudo systemctl enable ssh
 ```
 
-Conexión SSH
+#### Comprobar conexión
 Para conectarnos con la máquina con SSH deberemos abrir la consola de comandos en un dispositivo de la misma red
 y escribir el siguiente comando:
 ```bash
@@ -226,7 +258,7 @@ ssh usuario@ip
 Nos pedirá la contraseña del usuario y nos iniciará sesión. En ese momento podremos gestionar en remoto desde esa consola.
 Hay que tener en cuenta que los límites de que se puede hacer los marcan los privilegios que tenga el usuario conectado.
 
-### 1.2 Apache HTTP
+### 1.4 Apache HTTP
 
 #### Instalación
 Para instalar un servidor web vamos a descargar y configurar Apache. El primer paso es actualizar el SO y 
@@ -260,25 +292,7 @@ sudo systemctl {opcion} apache2
 
 ```
 
-#### Permisos y usuarios
-Ahora vamos a crear el usuario "operadoweb" que será el encargado de subir archivos al servidor. Solo podrá tener acceso a su carpeta ráiz
-que es /var/www/html y pertenecerá al grupo www-data
 
-```bash
-sudo adduser --home /var/www/html --ingroup www-data --shell /bin/bash operadorweb
-
-# Ahora debemos cambiar el dueño de la carpeta /var/www/html para que pertenezca a operadorweb
-sudo chown -R operadorweb:www-data /var/www/html            # Cambia el propietario y el grupo del directorio indicado.
-sudo chmod -R 775 /var/www/html                             # Cambia los permisos del usuario propietario, del grupo y del resto de propieatarios.
-
-# Para comprobar que los cambios han surgido efecto debemos hacer lo siguiente:
-ls -al /var/www/html
-
-drwxrwxr-x 2 operadorweb www-data  4096 oct  9 10:30 .
-drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
--rwxrwxr-x 1 operadorweb www-data 10671 oct  9 10:30 index.html
-
-```
 #### Protocolo HTTPS
 Es la versión segura del protocolo HTTP, el cual cifra la comunicación entre el navegador y el servidor, 
 garantizando confidencialidad, integridad y autenticación de los datos.
@@ -353,7 +367,7 @@ de dos formas.
 > 2. Introducir como autoridad certificadora a tu propio usuario en tu dispositivo. No supone un riesgo ya que te estás dando confianza
 > a ti mismo.
 >
- ### 1.3 Ejecución PHP con PHP-FPM
+ ### 1.5 Ejecución PHP con PHP-FPM
 FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga de interpretar código PHP.
 
 #### Instalación
@@ -445,7 +459,7 @@ sudo nano php.ini
 sudo systemctl restart php8.5-fpm
 ```
 
-### 1.4 MariaDB
+### 1.6 MariaDB
 El gestor de base de datos que hemos escogido, compatible con PHP, es MariaDB.
 MariaDB es un sistema de gestión de bases de datos relacional, muy similar a MySQL, permitiendo almacenar, organizar y acceder a información mediante el lenguaje SQL.
 A continuación detallaremos el proceso de instalación y puesta en marcha de este servicio.
@@ -579,7 +593,7 @@ Este asistente te permitirá:
 5. Elimina la base de datos de prueba (**Sí**).
 6. Recarga los privilegios (**Sí**).
 
-### 1.5 PHPMyadmin
+### 1.7 PHPMyadmin
 
 #### Instalación-2
 
