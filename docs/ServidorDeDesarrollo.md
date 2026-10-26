@@ -1,28 +1,27 @@
 - [1. Servidor de Desarrollo](#1-servidor-de-desarrollo)
-    - [1.1 Ubuntu Server 24.04.3 LTS](#11-ubuntu-server-24043-lts)
-        - [Configuración inicial](#configuracion-inicial)
-        - [Nombre y configuración de red](#nombre-y-configuracion-de-red)
-        - [Actualizar el sistema](#actualizar-el-sistema)
-        - [Configuración fecha y hora](#configuracion-fecha-y-hora)
-        - [Cuentas administradoras](#cuentas-administradoras)
-        - [Habilitar cortafuegos](#habilitar-cortafuegos)
-        - [Instalar Antivirus](#instalar-antivirus)
-        - [Comprobar conexión](#comprobar-conexion)
-    - [1.2 Apache HTTP](#12-Apache-HTTP)
-        - [Instalación](#instalación)
-        - [Verificación del servicio](#verificacion-del-servicio)
-        - [Permisos y usuarios](#permisos-y-usuarios)
-        - [Conexión segura (HTTPS)](#protocolo-https)
-        - [Módulos de Apache instalados](#modelos-de-apache-instalados)
-    - [1.3 Ejecución PHP con PHP-FPM](#13-ejecución-php-con-php-fpm)
-        - [Instalación](#instalación)
-        - [Configuración del php.ini para un entorno de desarrollo](#configuracion-del-php-ini-para-un-entorno-de-desarrollo)
-    - [1.4 MariaDB](#14-mariadb)
-        - [Instalación y configuración de MariaDB](#instalacion-y-configuracion-de-mariadb)
-        - [Consola de MariaDB](#consola-de-mariadb)
-        - [Creación de un usuario administrador](#creacion-de-un-usuario-administrador)
-    - [1.5 PHPMyadmin](#15-phpmyadmin)
-        - [Instalacion](#instalacion)
+  - [1.1 Ubuntu Server 26.04.1 LTS](#11-ubuntu-server-26041-lts)
+    - [Configuración inicial](#configuración-inicial)
+    - [Nombre y configuración de red](#nombre-y-configuración-de-red)
+    - [Actualizar el sistema](#actualizar-el-sistema)
+    - [Configuración de fecha y hora](#configuración-de-fecha-y-hora)
+    - [Cuentas administradoras](#cuentas-administradoras)
+    - [Habilitar cortafuegos](#habilitar-cortafuegos)
+    - [Instalar antivirus](#instalar-antivirus)
+    - [Comprobar conexión](#comprobar-conexión)
+  - [1.2 Apache HTTP](#12-apache-http)
+    - [Instalación](#instalación)
+    - [Verficación del servicio](#verficación-del-servicio)
+    - [Permisos y usuarios](#permisos-y-usuarios)
+    - [Protocolo HTTPS](#protocolo-https)
+  - [1.3 Ejecución PHP con PHP-FPM](#13-ejecución-php-con-php-fpm)
+    - [Instalación](#instalación-1)
+    - [Configuración del php.ini para un entorno de desarrollo.](#configuración-del-phpini-para-un-entorno-de-desarrollo)
+  - [1.4 MariaDB](#14-mariadb)
+      - [Instalación y configuración de MariaDB](#instalación-y-configuración-de-mariadb)
+    - [Consola de MariaDB](#consola-de-mariadb)
+    - [Creación de un usuario administrador](#creación-de-un-usuario-administrador)
+  - [1.5 PHPMyadmin](#15-phpmyadmin)
+    - [Instalación](#instalación-2)
     
 
 
@@ -354,7 +353,7 @@ de dos formas.
 > 2. Introducir como autoridad certificadora a tu propio usuario en tu dispositivo. No supone un riesgo ya que te estás dando confianza
 > a ti mismo.
 >
-> ### 1.3 Ejecución PHP con PHP-FPM
+ ### 1.3 Ejecución PHP con PHP-FPM
 FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga de interpretar código PHP.
 
 #### Instalación
@@ -582,7 +581,7 @@ Este asistente te permitirá:
 
 ### 1.5 PHPMyadmin
 
-#### Instalación
+#### Instalación-2
 
 * Se actualiza el servidor
 ```bash
