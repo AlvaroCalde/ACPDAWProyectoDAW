@@ -593,7 +593,14 @@ sudo apt upgrade
 ```bash
 sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 ```
-Para comprobar que funciona pega esto en el navegador cambiando IP por la IP del servidor http://IP/phpmyadmin
+Para comprobar que funciona pega esto en el navegador cambiando IP por la IP del servidor http://IP/phpmyadmin    
+
+* En caso de que el enlace no funcione por la redirección a https prueba a instalar los siguientes módulos
+```bash
+sudo apt update
+sudo apt install php libapache2-mod-php php-mysql php-mbstring
+sudo systemctl restart apache2
+```
 
 **Conexión con NetBeans**\
 Ve a la pestaña services, click derecho en databases>New connection elige mariadb y pon el driver que se puede descargar aquí
