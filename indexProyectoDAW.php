@@ -14,38 +14,34 @@
     <main>
         <div class="content">
             <div class="UD1" id="1"> 
-                <p>ARQUITECTURA WEB</p>
+                <p>ARQUITECTURA WEB. IMPLANTACIÓN, CONFIGURACIÓN Y ADMINISTRACIÓN DE SERVIDORES WEB</p>
+                <a href="https://github.com/AlvaroCalde/ACPDAWProyectoDAW/blob/master/docs/ServidorDeDesarrollo.md" class="ej"  target="_blank">USED</a>
+                <a href="https://github.com/AlvaroCalde/ACPDAWProyectoDAW/blob/master/docs/ClienteDeDesarrollo.md" class="ej"  target="_blank">W10ED</a>
             </div>
         
         
         
-            <div class="UD2" id="2">
-                <p>IMPLANTACIÓN, CONFIGURACIÓN Y ADMINISTRACIÓN DE SERVIDORES WEB</p>
-                <a href="https://github.com/AlvaroCalde/ACPDAWProyectoDAW/blob/master/docs/ServidorDeDesarrollo.md" class="ej"  target="_blank">USED</a>
-                <a href="./docs/ClienteDeDesarrollo.pdf" class="ej"  target="_blank">W10ED</a>
-            </div> 
         
-        
-            <div class="UD3" id="3"> 
-                <p>IMPLANTACIÓN, CONFIGURACIÓN Y ADMINISTRACIÓN DE SERVIDORES DE APLICACIÓN</p>
+            <div class="UD2" id="2"> 
+                <p>IMPLANTACIÓN, CONFIGURACIÓN Y ADMINISTRACIÓN DE SERVIDORES APLICACIONES</p>
             </div>
         
         
 
-            <div class="UD4" id="4"> 
+            <div class="UD3" id="3"> 
                 <p>SERVICIOS DE RED IMPLICADOS EN EL DESPLIEGUE DE APLICACIONES</p>
             </div>
          
         
 
-            <div class="UD5" id="5"> 
+            <div class="UD4" id="4"> 
                 
                 <p>CONTROL DE VERSIONES</p>
             </div>
            
         
 
-            <div class="UD6" id="6"> 
+            <div class="UD5" id="5"> 
                 <p>DOCUMENTACIÓN</p>
                 
             </div>
