@@ -15,8 +15,6 @@
   - [1.4 Apache HTTP](#14-apache-http)
     - [Instalación](#instalación)
     - [Verficación del servicio](#verficación-del-servicio)
-    - [Cuentas de administrador](#permisos-y-usuarios)
-    - [Cuentas de desarrollador](#permisos-y-usuarios)
     - [Protocolo HTTPS](#protocolo-https)
   - [1.5 Ejecución PHP con PHP-FPM](#15-ejecución-php-con-php-fpm)
     - [Instalación](#instalación-1)
