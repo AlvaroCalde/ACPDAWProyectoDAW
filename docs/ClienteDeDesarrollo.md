@@ -11,8 +11,8 @@
     - [*Instalación*](#instalación-1)
     - [*Configuración*](#configuración-1)
     - [*Ejemplo de uso*](#ejemplo-de-uso-1)
-    - [Administración de la base de datos](#53-administración-de-la-base-de-datos)
-    - [Conexión al repositorio y versionado (Git)](#54-conexión-al-repositorio-y-versionado-git)
+    - [Administración de la base de datos](#administración-de-la-base-de-datos)
+    - [*Conexión al repositorio y versionado (Git)*](#conexión-al-repositorio-y-versionado-git)
   - [**5 Visual Studio Code**](#5-visual-studio-code)
     - [*Instalación*](#instalación-2)
     - [*Configuración*](#configuración-2)
@@ -124,6 +124,7 @@ NetBeans permite administrar de forma remota bases de datos MySQL/MariaDB direct
 7. Haz clic en **Finish**. A partir de ahora podrás desplegar tu conexión para visualizar las tablas, insertar registros o abrir la ventana del editor SQL haciendo clic derecho > **Execute Command**.
 
 ### Conexión al repositorio y versionado (Git)
+### <h2>*Conexión al repositorio y versionado (Git)*</h2>
 Para llevar un control de versiones adecuado y conectar tu código con repositorios remotos (como GitHub o GitLab), NetBeans incorpora soporte nativo para Git.
 
 #### Inicializar un proyecto local y subirlo a GitHub
