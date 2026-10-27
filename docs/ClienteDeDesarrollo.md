@@ -11,6 +11,8 @@
     - [*Instalación*](#instalación-1)
     - [*Configuración*](#configuración-1)
     - [*Ejemplo de uso*](#ejemplo-de-uso-1)
+    - [Administración de la base de datos](#53-administración-de-la-base-de-datos)
+    - [Conexión al repositorio y versionado (Git)](#54-conexión-al-repositorio-y-versionado-git)
   - [**5 Visual Studio Code**](#5-visual-studio-code)
     - [*Instalación*](#instalación-2)
     - [*Configuración*](#configuración-2)
@@ -100,7 +102,58 @@ Apache NetBeans IDE 20
 
 **<h3>Borrar proyecto con conexion (SFTP) al servidor</h3>**
 - botón secundario sobre el proyecto y delete. Nos pedirá confirmación y si queremos que borre los archivos en nuestro ordenador. Los del servidor lo tenemos que borrar a mano.
+### Administración de la base de datos
+NetBeans permite administrar de forma remota bases de datos MySQL/MariaDB directamente desde el IDE, facilitando la ejecución de scripts SQL y la visualización de tablas sin necesidad de cambiar a phpMyAdmin o a la consola.
 
+**Pasos para configurar la conexión:**
+1. Ve a la pestaña **Services** (Servicios) ubicada en el panel lateral izquierdo junto a la de *Projects*.
+2. Despliega el nodo **Databases** (Bases de datos).
+3. Haz clic derecho sobre **Databases** y selecciona **New Connection...** (Nueva conexión).
+
+
+4. En el desplegable de drivers, selecciona **MySQL** o **MariaDB** y haz clic en *Next*. (Previamente descargar el plugin correspondiente a la base de datos).
+
+5. Rellena los datos de tu servidor:
+   * **Host:** Introduce la IP de tu servidor Ubuntu (ej. `10.199.8.153`).
+   * **Port:** `3306` (el puerto por defecto de MariaDB).
+   * **Database:** Puedes dejarlo en blanco o poner el nombre de una base específica si ya está creada.
+   * **User Name:** El usuario administrador de la base de datos que creaste (ej. `adminsql`).
+   * **Password:** La contraseña de ese usuario (ej. `paso`). Marca la casilla "Remember password".
+
+6. Haz clic en el botón **Test Connection**. Si la configuración remota (bind-address en Ubuntu y puertos de UFW) es correcta, aparecerá el mensaje de éxito.
+7. Haz clic en **Finish**. A partir de ahora podrás desplegar tu conexión para visualizar las tablas, insertar registros o abrir la ventana del editor SQL haciendo clic derecho > **Execute Command**.
+
+### Conexión al repositorio y versionado (Git)
+Para llevar un control de versiones adecuado y conectar tu código con repositorios remotos (como GitHub o GitLab), NetBeans incorpora soporte nativo para Git.
+
+#### Inicializar un proyecto local y subirlo a GitHub
+*Cuando has creado tu proyecto desde cero en NetBeans (localmente) y quieres subirlo por primera vez a un repositorio vacío en GitHub.*
+1. **Inicializar:** Haz clic derecho sobre tu proyecto en la pestaña *Projects* > **Versioning** > **Initialize Git Repository...** y confirma la ruta. Tus archivos se pondrán verdes (sin trackear).
+2. **Primer Commit:** Haz clic derecho en el proyecto > **Git** > **Commit...** Escribe un mensaje (ej. "Commit inicial") y haz clic en *Commit*.
+3. **Vincular y Subir (Push):** Haz clic derecho en el proyecto > **Git** > **Remote** > **Push...**
+   * Marca "Specify Git Repository Location".
+   * Introduce la URL de tu repositorio vacío de GitHub y tu Token de acceso personal en el campo de contraseña.
+   * Selecciona tu rama local (normalmente `master` o `main`) y finaliza el asistente para subir el código.
+
+#### Clonar un repositorio existente desde GitHub
+*Cuando el proyecto ya existe en GitHub y quieres descargarlo a tu equipo para empezar a trabajar.*
+1. En el menú superior de NetBeans, ve a **Team** > **Git** > **Clone...**
+2. Introduce la URL del repositorio remoto (ej. `https://github.com/usuario/repositorio.git`).
+3. Rellena tu usuario y tu Token de acceso personal (en "Password").
+4. Selecciona la rama que quieres clonar y elige tu carpeta local de destino (ej. `D:\ProyectosNetbeans`).
+5. NetBeans te preguntará si quieres abrir el proyecto recién clonado. Haz clic en sí.
+
+#### Comandos importantes
+Una vez conectado el repositorio, existen estas opciones que al hacer clic derecho en tu proyecto > **Git**:
+* **Commit:** Guarda los cambios de forma local en tu equipo. Escribe siempre un mensaje descriptivo para indicar qué has modificado.
+* **Remote > Fetch:** Descarga la información y el historial de cambios más recientes del repositorio remoto, pero *no* los fusiona con tu código local. Es muy útil para revisar qué han subido tus compañeros antes de integrarlo.
+* **Remote > Pull:** Descarga y fusiona directamente las actualizaciones del repositorio remoto con tu código local.
+* **Remote > Push:** Envía tus *commits* locales al repositorio de GitHub para que queden respaldados en la nube.
+* **Branch (Ramas):** Ve a **Git > Branch > Create Branch...** para crear una nueva línea de trabajo paralela (muy útil para desarrollar nuevas funcionalidades sin romper el código principal). Para cambiarte de una rama a otra, usa **Git > Branch > Checkout...**
+* **Merge (Fusionar):** Seleccionando **Git > Branch > Merge Revision...** combinas los cambios de otra rama hacia la rama en la que te encuentras trabajando actualmente.
+* **Resolver Conflictos (Resolve Conflicts):** Si al hacer Pull o Merge existen líneas de código contradictorias, NetBeans te ofrecerá una herramienta visual (Diff) para decidir qué cambios mantener y cuáles descartar.
+* **Pull Requests (PR):** Aunque los PR se revisan y aprueban desde la plataforma web (GitHub/GitLab), el flujo de trabajo inicia en NetBeans: creas una rama, haces tus cambios, haces *Push* de esa rama, y luego vas a tu navegador para abrir el PR y solicitar que tu código se integre en la rama `main` / `master`.
+* **Show History:** Te muestra una línea de tiempo interactiva en la pestaña inferior del IDE con todos los cambios, fechas, autores y *commits* del proyecto.
 
 ## <h2>**5 Visual Studio Code**</h2>
 
