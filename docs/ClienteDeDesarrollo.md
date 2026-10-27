@@ -14,7 +14,15 @@
   - [**5 Visual Studio Code**](#5-visual-studio-code)
     - [*Instalación*](#instalación-2)
     - [*Configuración*](#configuración-2)
+<<<<<<< HEAD
 
+=======
+    - [*Ejemplo de uso*](#ejemplo-de-uso-2)
+      - [**Abrir proyecto**](#abrir-proyecto)
+      - [**Conexión SFTP y SSH al servidor**](#conexión-sftp-y-ssh-al-servidor)
+      - [**Conectar a base de datos**](#conectar-a-base-de-datos)
+      - [**Uso de Git y GitHub**](#uso-de-git-y-github)
+>>>>>>> ff224dd0042b471b4b0685c94611b0f364180ad9
 
 ## <h2>**1 Configuración inicial**</h2>
 
@@ -36,8 +44,12 @@ Lo descargamos de la página oficial, tenemos dos versiones, una portable y otra
 ### <h2>*Ejemplo de uso*</h2>
 
 #### **<h3>Conexion SSH</h3>**
+<<<<<<< HEAD
 Damos al icono de *Session* arriba a la izquierda, elegimos SSH y configuramos ip y nombre de usuario.     
 <img src="../webroot/images/moba01.png" width="600px">
+=======
+Damos al icono de *Session* arriba a la izquierda, elegimos SSH y configuramos ip y nombre de usuario.
+>>>>>>> ff224dd0042b471b4b0685c94611b0f364180ad9
 
 Le damos a OK y nos pedirá la contraseña para conectarse.
 
@@ -49,8 +61,12 @@ miadmin@acp-used:~$
 ````
 
 #### **<h3>Conexión SFTP</h3>**
+<<<<<<< HEAD
 Damos al icono de *Session* arriba a la izquierda, elegimos SFTP y configuramos ip y nombre de usuario.    
 <img src="../webroot/images/moba02.png" width="600px">
+=======
+Damos al icono de *Session* arriba a la izquierda, elegimos SFTP y configuramos ip y nombre de usuario.
+>>>>>>> ff224dd0042b471b4b0685c94611b0f364180ad9
 
 Le damos a OK y nos pedirá la contraseña para conectarse.
 
@@ -75,6 +91,7 @@ Apache NetBeans IDE 20
 - capturas solo de la parte ineteresada, no de toda la pantalla
 
 **<h3>Crear proyecto con conexion (SFTP) al servidor</h3>**
+<<<<<<< HEAD
 - Nuevo proyecto PHP marcando la opción "PHP Application from Remote Server"    
 <img src="../webroot/images/NB01.png" width="600px">
 
@@ -86,6 +103,15 @@ Apache NetBeans IDE 20
 
 - La primera vez que creamos un proyecto con conexión al servidor hay que configurarlo con nombre de usuario, contraseña y directorio inicial     
 <img src="../webroot/images/NB04.png" width="600px">
+=======
+- Nuevo proyecto PHP marcando la opción "PHP Application from Remote Server"
+
+- Ponemos nombre de proyecto y cambiamos la ruta por la nuestra personal
+
+- Configuramos la url con nuestro servidor y el nombre del proyecto en el servidor, en el caso del proyecto principal no tiene carpeta es la raíz (/)
+
+- La primera vez que creamos un proyecto con conexión al servidor hay que configurarlo con nombre de usuario, contraseña y directorio inicial
+>>>>>>> ff224dd0042b471b4b0685c94611b0f364180ad9
 
 - Si todo ha ido bien se conectará al servidor y entrará en la carpeta del proyecto que previamente tenemos que haber creado y que haya por lo menos un archivo en ella. Aquí ya marcamos para que se bajen los archivos que queramos.
 
@@ -143,3 +169,16 @@ https://marketplace.visualstudio.com/items?itemName=Natizyskunk.sftp
 https://marketplace.visualstudio.com/items?itemName=tomoki1207.pdf
 
 
+<<<<<<< HEAD
+=======
+### <h2>*Ejemplo de uso*</h2>
+
+#### **<h3>Abrir proyecto</h3>**
+En vsCode no tenemos el concepto de proyecto como tal, lo que hacemos es abrir la carpeta donde tenemos los archivos.
+
+Primero, si estamos trabajando en algun proyecto ya y queremos abrir otro, lo que hacemos es abrir nueva ventana en archivos(File)
+
+Para abrir una carpeta vamos a archivos(File) y a abrir carpeta(open folder), se abrirá el explorador de archivos y buscamos la carpeta del proyecto.
+
+Otra opción que tenemos para abrir proyectos recientes rápidamente es desde la ventana principal que aparecen los ultimos 5 proyectos que hemos abierto y si damos a más podemos abrir practicamente cualquier proyecto anterior.
+>>>>>>> ff224dd0042b471b4b0685c94611b0f364180ad9
