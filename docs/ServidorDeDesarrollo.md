@@ -44,7 +44,7 @@
 
 Para cambiar el hostname se usa: 
 ```bash
-
+sudo hostnamectl set-hostname nuevo-nombre
 ```
 
 Para comprobar todos estos valores debemos usar los siguientes comandos:
