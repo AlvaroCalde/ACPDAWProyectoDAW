@@ -152,6 +152,111 @@ drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
 
 ```
 
+Un usuario **enjaulado** (*chroot*) ve su carpeta como si fuera la raíz `/` del sistema: no puede salir de ella ni ver nada del resto del servidor. Es la forma habitual de dar acceso a un alojamiento web a clientes o alumnos. La parte de SSH que lo hace posible se configuró en el [apartado 1.4](#14-actualización-nombre-zona-horaria-ssh-cortafuegos-y-antivirus) (`Match Group sftpusers`).
+
+**1. Crear el grupo** de los usuarios enjaulados:
+
+```bash
+sudo groupadd sftpusers
+```
+
+**2. Crear el usuario** `enjaulado1`, con grupo primario `www-data` y grupo secundario `sftpusers`:
+
+```bash
+# La opción -m crea el directorio si no existe
+sudo useradd -g www-data -G sftpusers -m -d /var/www/enjaulado1 enjaulado1
+
+# Establecer la contraseña (paso)
+echo 'enjaulado1:paso' | sudo chpasswd
+```
+
+> **Corrección.** En la versión anterior los guiones de estas órdenes eran guiones largos tipográficos (`–g`, `–G`, `–d`, `–R`), que la terminal no reconoce como opciones: al copiar y pegar daban error. Aquí son guiones normales (`-`).
+
+**3. La jaula debe pertenecer a `root`.** Es una exigencia de SSH: el directorio de la jaula tiene que ser de `root` y nadie más debe poder escribir en él. Si no se cumple, SSH rechaza la conexión.
+
+```bash
+# El directorio de la jaula pasa a ser de root
+sudo chown root:root /var/www/enjaulado1
+
+# Se elimina el permiso de escritura
+sudo chmod 555 /var/www/enjaulado1
+```
+
+**4. Carpeta de trabajo.** Como el usuario no puede escribir en su propia jaula, se le crea dentro la carpeta `httpdocs`, que es donde trabajará:
+
+```bash
+# Crear la carpeta httpdocs
+sudo mkdir /var/www/enjaulado1/httpdocs
+
+# Permisos de la carpeta
+sudo chmod -R 2775 /var/www/enjaulado1/httpdocs
+
+# Propietario y grupo de la carpeta
+sudo chown -R enjaulado1:www-data /var/www/enjaulado1/httpdocs
+```
+
+> **¿Qué es el 2 de `2775`?** Es el bit *setgid*: todo lo que se cree dentro de `httpdocs` heredará el grupo `www-data`, de modo que Apache siempre podrá leer lo que suba el usuario.
+
+---
+
+
+
+```bash
+# Información de operadorweb
+id operadorweb
+grep operadorweb /etc/passwd
+
+# Propiedad y permisos del directorio web
+ls -la /var/www/
+ls -ld /var/www/html
+```
+
+**Salida esperada:**
+
+```text
+drwxrwxr-x 3 operadorweb www-data 4096 Sep 21 21:34 /var/www/html
+```
+
+```bash
+# Permisos y directorios desde /var/www: debe aparecer "enjaulado1"
+ls -l /var/www
+
+# Lo mismo para la carpeta "enjaulado1": debe aparecer "httpdocs"
+ls -l /var/www/enjaulado1
+
+# Comprobar que el usuario está creado y pertenece a www-data y sftpusers
+id enjaulado1
+```
+
+```text
+dr-xr-xr-x 3 root        root     4096 Nov 16 17:10 enjaulado1
+drwxrwxr-x 3 operadorweb www-data 4096 Nov 16 17:05 html
+
+drwxrwsr-x 2 enjaulado1  www-data 4096 Nov 16 17:10 httpdocs
+
+uid=1003(enjaulado1) gid=33(www-data) groups=33(www-data),1004(sftpusers)
+```
+
+*(Los números de `uid` y de grupo pueden variar.)* En `ls -l` se muestra, por orden:
+
+`(Permisos) (Nº de enlaces) (Propietario) (Grupo) (Tamaño) (Fecha) (Nombre)`
+
+La `s` de `drwxrwsr-x` es el bit *setgid* del apartado anterior.
+
+**Prueba real de la jaula**, desde una terminal del equipo anfitrión:
+
+```bash
+# Debe conectar (contraseña: paso). Dentro, "pwd" responde "/" y "ls" solo muestra httpdocs
+sftp enjaulado1@10.199.8.97
+
+# Debe ser rechazado: el usuario enjaulado no tiene acceso a la terminal
+ssh enjaulado1@10.199.8.97
+```
+
+Dentro de la sesión SFTP, `cd httpdocs` y `put archivo.html` suben un archivo; `exit` cierra la conexión.
+
+---
+
 ## 1.2  UFW
 
 #### Instalar cortafuegos
