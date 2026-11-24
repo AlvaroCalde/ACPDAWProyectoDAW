@@ -483,10 +483,10 @@ La `s` de `drwxrwsr-x` es el bit *setgid* del apartado anterior.
 
 ```bash
 # Debe conectar (contraseña: paso). Dentro, "pwd" responde "/" y "ls" solo muestra httpdocs
-sftp enjaulado1@10.199.8.97
+sftp enjaulado1@10.199.8.153
 
 # Debe ser rechazado: el usuario enjaulado no tiene acceso a la terminal
-ssh enjaulado1@10.199.8.97
+ssh enjaulado1@10.199.8.153
 ```
 
 Dentro de la sesión SFTP, `cd httpdocs` y `put archivo.html` suben un archivo; `exit` cierra la conexión.
