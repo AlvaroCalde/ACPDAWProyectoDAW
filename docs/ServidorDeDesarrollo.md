@@ -6,6 +6,7 @@
     - [Configuración de fecha y hora](#configuración-de-fecha-y-hora)
     - [Cuentas administradoras](#cuentas-administradoras)
     - [Cuentas desarrolladoras](#cuentas-desarrolladoras)
+    - [Cuentas enjauladas](#cuentas-enjauladas)
   - [1.2 UFW](#1.2_UFW)
     - [Instalar cortafuegos](#instalar-cortafuegos)
     - [Instalar antivirus](#instalar-antivirus)
@@ -152,6 +153,7 @@ drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
 
 ```
 
+#### Cuentas enjauladas
 Un usuario **enjaulado** (*chroot*) ve su carpeta como si fuera la raíz `/` del sistema: no puede salir de ella ni ver nada del resto del servidor. Es la forma habitual de dar acceso a un alojamiento web a clientes o alumnos. La parte de SSH que lo hace posible se configuró en el [apartado 1.4](#14-actualización-nombre-zona-horaria-ssh-cortafuegos-y-antivirus) (`Match Group sftpusers`).
 
 **1. Crear el grupo** de los usuarios enjaulados:
