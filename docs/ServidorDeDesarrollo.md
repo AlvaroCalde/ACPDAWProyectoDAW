@@ -5,21 +5,26 @@
     - [Actualizar el sistema](#actualizar-el-sistema)
     - [Configuración de fecha y hora](#configuración-de-fecha-y-hora)
     - [Cuentas administradoras](#cuentas-administradoras)
-    - [Habilitar cortafuegos](#habilitar-cortafuegos)
+    - [Cuentas desarrolladoras](#cuentas-desarrolladoras)
+  - [1.2 UFW](#1.2_UFW)
+    - [Instalar cortafuegos](#instalar-cortafuegos)
     - [Instalar antivirus](#instalar-antivirus)
+  - [1.3 SSH](#1.3_SSH)
+    - [Instalar SSH](#instalar-SSH)
     - [Comprobar conexión](#comprobar-conexión)
-  - [1.2 Apache HTTP](#12-apache-http)
+  - [1.4 Apache HTTP](#14-apache-http)
     - [Instalación](#instalación)
     - [Verficación del servicio](#verficación-del-servicio)
-    - [Permisos y usuarios](#permisos-y-usuarios)
     - [Protocolo HTTPS](#protocolo-https)
+    - [Cuentas enjauladas](#cuentas-enjauladas)
+  - [1.5 Ejecución PHP con PHP-FPM](#15-ejecución-php-con-php-fpm)
     - [Instalación](#instalación-1)
     - [Configuración del php.ini para un entorno de desarrollo.](#configuración-del-phpini-para-un-entorno-de-desarrollo)
-  - [1.4 MariaDB](#14-mariadb)
+  - [1.6 MariaDB](#16-mariadb)
       - [Instalación y configuración de MariaDB](#instalación-y-configuración-de-mariadb)
     - [Consola de MariaDB](#consola-de-mariadb)
     - [Creación de un usuario administrador](#creación-de-un-usuario-administrador)
-  - [1.5 PHPMyadmin](#15-phpmyadmin)
+  - [1.7 PHPMyadmin](#17-phpmyadmin)
     - [Instalación](#instalación-2)
     
 
@@ -37,6 +42,11 @@
 > **Dirección IP** :10.199.8.153/22\
 > **GW**: 10.199.8.1\
 > **DNS**: 10.151.123.21 o 10.151.126.21
+
+Para cambiar el hostname se usa: 
+```bash
+sudo hostnamectl set-hostname nuevo-nombre
+```
 
 Para comprobar todos estos valores debemos usar los siguientes comandos:
 ```bash
@@ -96,8 +106,6 @@ sudo timedatectl set-timezone Europe/Madrid         # En caso de querer poner la
 
 #### Cuentas administradoras 
 
-
-
 > root(inicio)\
 > miadmin/paso\  
 > miadmin2/paso
@@ -116,14 +124,40 @@ Una vez creado el usuario tenemos que darle privilegios de sudo, es decir, meter
 sudo usermod -aG sudo miadmin2          
 # Meter al usuario miadmin2 en el grupo sudo sin quitarle del resto de grupos que pertenece y -G indica los grupos suplementarios a los que quieres añadir el usuario.
 # Ahora lo que tenemos que hacer es el meter a miadmin2 en los mismos grupos que miadmin usando este comando y listando
-  con cat /etc/group | grep miadmin
+  con cat /etc/group | grep miadmin     
 
 **Comandos recomendados**
 su nombreusuario                        # Inicia sesión en el usuario indicado.
 exit                                    # Cierra la sesión actual.
 ```
-#### Habilitar cortafuegos
-**UFW**\
+
+#### Cuentas desarrolladoras 
+
+> operadorweb/paso
+> operadorweb2/paso
+> operadorweb3/paso
+
+```bash
+sudo adduser --home /var/www/html --ingroup www-data --shell /bin/bash operadorweb
+
+# Ahora debemos cambiar el dueño de la carpeta /var/www/html para que pertenezca a operadorweb
+sudo chown -R operadorweb:www-data /var/www/html            # Cambia el propietario y el grupo del directorio indicado.
+sudo chmod -R 775 /var/www/html                             # Cambia los permisos del usuario propietario, del grupo y del resto de propieatarios.
+
+# Para comprobar que los cambios han surgido efecto debemos hacer lo siguiente:
+ls -al /var/www/html
+
+drwxrwxr-x 2 operadorweb www-data  4096 oct  9 10:30 .
+drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
+-rwxrwxr-x 1 operadorweb www-data 10671 oct  9 10:30 index.html
+
+```
+
+
+
+## 1.2  UFW
+
+#### Instalar cortafuegos
 Para comprobar el estado del cortafuegos y saber si está activado o desactivado, se debe  usar el siguiente comando:
 
 ```bash
@@ -185,9 +219,9 @@ Para saber la version del antivirus
 clamscan --version
 ```
 
-#### Comprobar conexión
+## 1.3 SSH
 
-**SSH**\
+#### Instalar SSH
 El protocolo de red SSH permite controlar y modificar servidores remotos de manera segura a través de Internet.
 
 En el momento que estamos instalando el sistema operativo Ubuntu Server 26.04.1 LTS el instalador nos pregunta si queremos el servicio SSH.
@@ -215,7 +249,7 @@ sudo systemctl [start|restart] ssh
 sudo systemctl enable ssh
 ```
 
-Conexión SSH
+#### Comprobar conexión
 Para conectarnos con la máquina con SSH deberemos abrir la consola de comandos en un dispositivo de la misma red
 y escribir el siguiente comando:
 ```bash
@@ -225,7 +259,7 @@ ssh usuario@ip
 Nos pedirá la contraseña del usuario y nos iniciará sesión. En ese momento podremos gestionar en remoto desde esa consola.
 Hay que tener en cuenta que los límites de que se puede hacer los marcan los privilegios que tenga el usuario conectado.
 
-### 1.2 Apache HTTP
+### 1.4 Apache HTTP
 
 #### Instalación
 Para instalar un servidor web vamos a descargar y configurar Apache. El primer paso es actualizar el SO y 
@@ -245,23 +279,8 @@ sudo ufw status numbered
 sudo ufw delete 'numeropuerto'          #Borramos el puerto 80 (v6) usando su número de indetificación
 
 ```
-#### Verficación del servicio
 
-Para verificar que Apache se ha instalado y está funcionando correctamente tenemos dos formas: entrando a un 
-navegador desde el ordenador anfitrión y buscando la página con al dirección IP de la máquina. Si aparece una 
-página como la de abajo es que Apache esta funcionando correctamente y que ambas máquinas están en la misma red. 
-La otra forma es mediante los siguientes comandos:
-
-```bash
-
-sudo service apache2 {opcion}
-sudo systemctl {opcion} apache2
-
-```
-
-#### Permisos y usuarios
-Ahora vamos a crear el usuario "operadoweb" que será el encargado de subir archivos al servidor. Solo podrá tener acceso a su carpeta ráiz
-que es /var/www/html y pertenecerá al grupo www-data
+Si no se ha añadido antes el usuario operadorweb:
 
 ```bash
 sudo adduser --home /var/www/html --ingroup www-data --shell /bin/bash operadorweb
@@ -278,6 +297,21 @@ drwxr-xr-x 3 root        root      4096 oct  9 10:30 ..
 -rwxrwxr-x 1 operadorweb www-data 10671 oct  9 10:30 index.html
 
 ```
+#### Verficación del servicio
+
+Para verificar que Apache se ha instalado y está funcionando correctamente tenemos dos formas: entrando a un 
+navegador desde el ordenador anfitrión y buscando la página con al dirección IP de la máquina. Si aparece una 
+página como la de abajo es que Apache esta funcionando correctamente y que ambas máquinas están en la misma red. 
+La otra forma es mediante los siguientes comandos:
+
+```bash
+
+sudo service apache2 {opcion}
+sudo systemctl {opcion} apache2
+
+```
+
+
 #### Protocolo HTTPS
 Es la versión segura del protocolo HTTP, el cual cifra la comunicación entre el navegador y el servidor, 
 garantizando confidencialidad, integridad y autenticación de los datos.
@@ -326,23 +360,8 @@ sudo ufw status numbered # Comprobar el número del puerto 443(v6)
 sudo ufw delete (nº)
 ```
 
-**Redirección de http a https**        
-**Para el usuario administrador**    
-Se debe modificar el archivo 000-default.conf
-``` bash
-sudo nano /etc/apache2/sites-available/000-default.conf
-```
-
-Dentro del bloque de VirtualHost 80 se debe poner la siguiente linea   
-``` bash
-Redirect permanent / https://10.199.8.153/
-
-sudo systemctl restart apache2 # Reiniciamos Apache2
-```
-Se guarda el archivo
-
-**Para alguien no administrador**   
-Otra forma de hacerlo sería modificar el archivo de configuración de Apache
+**Redirección de http a https**          
+Modificar el archivo de configuración de Apache
 ``` bash
 sudo nano /etc/apache2/apache2.conf
 ```
@@ -367,7 +386,115 @@ de dos formas.
 > 2. Introducir como autoridad certificadora a tu propio usuario en tu dispositivo. No supone un riesgo ya que te estás dando confianza
 > a ti mismo.
 >
-> ### 1.3 Ejecución PHP con PHP-FPM
+
+#### Cuentas enjauladas
+Un usuario **enjaulado** (*chroot*) ve su carpeta como si fuera la raíz `/` del sistema: no puede salir de ella ni ver nada del resto del servidor. Es la forma habitual de dar acceso a un alojamiento web a clientes o alumnos. La parte de SSH que lo hace posible se configuró en el [apartado 1.4](#14-actualización-nombre-zona-horaria-ssh-cortafuegos-y-antivirus) (`Match Group sftpusers`).
+
+**1. Crear el grupo** de los usuarios enjaulados:
+
+```bash
+sudo groupadd sftpusers
+```
+
+**2. Crear el usuario** `enjaulado1`, con grupo primario `www-data` y grupo secundario `sftpusers`:
+
+```bash
+# La opción -m crea el directorio si no existe
+sudo useradd -g www-data -G sftpusers -m -d /var/www/enjaulado1 enjaulado1
+
+# Establecer la contraseña (paso)
+echo 'enjaulado1:paso' | sudo chpasswd
+```
+
+> **Corrección.** En la versión anterior los guiones de estas órdenes eran guiones largos tipográficos (`–g`, `–G`, `–d`, `–R`), que la terminal no reconoce como opciones: al copiar y pegar daban error. Aquí son guiones normales (`-`).
+
+**3. La jaula debe pertenecer a `root`.** Es una exigencia de SSH: el directorio de la jaula tiene que ser de `root` y nadie más debe poder escribir en él. Si no se cumple, SSH rechaza la conexión.
+
+```bash
+# El directorio de la jaula pasa a ser de root
+sudo chown root:root /var/www/enjaulado1
+
+# Se elimina el permiso de escritura
+sudo chmod 555 /var/www/enjaulado1
+```
+
+**4. Carpeta de trabajo.** Como el usuario no puede escribir en su propia jaula, se le crea dentro la carpeta `httpdocs`, que es donde trabajará:
+
+```bash
+# Crear la carpeta httpdocs
+sudo mkdir /var/www/enjaulado1/httpdocs
+
+# Permisos de la carpeta
+sudo chmod -R 2775 /var/www/enjaulado1/httpdocs
+
+# Propietario y grupo de la carpeta
+sudo chown -R enjaulado1:www-data /var/www/enjaulado1/httpdocs
+```
+
+> **¿Qué es el 2 de `2775`?** Es el bit *setgid*: todo lo que se cree dentro de `httpdocs` heredará el grupo `www-data`, de modo que Apache siempre podrá leer lo que suba el usuario.
+
+---
+
+
+
+```bash
+# Información de operadorweb
+id operadorweb
+grep operadorweb /etc/passwd
+
+# Propiedad y permisos del directorio web
+ls -la /var/www/
+ls -ld /var/www/html
+```
+
+**Salida esperada:**
+
+```text
+drwxrwxr-x 3 operadorweb www-data 4096 Sep 21 21:34 /var/www/html
+```
+
+```bash
+# Permisos y directorios desde /var/www: debe aparecer "enjaulado1"
+ls -l /var/www
+
+# Lo mismo para la carpeta "enjaulado1": debe aparecer "httpdocs"
+ls -l /var/www/enjaulado1
+
+# Comprobar que el usuario está creado y pertenece a www-data y sftpusers
+id enjaulado1
+```
+
+```text
+dr-xr-xr-x 3 root        root     4096 Nov 16 17:10 enjaulado1
+drwxrwxr-x 3 operadorweb www-data 4096 Nov 16 17:05 html
+
+drwxrwsr-x 2 enjaulado1  www-data 4096 Nov 16 17:10 httpdocs
+
+uid=1003(enjaulado1) gid=33(www-data) groups=33(www-data),1004(sftpusers)
+```
+
+*(Los números de `uid` y de grupo pueden variar.)* En `ls -l` se muestra, por orden:
+
+`(Permisos) (Nº de enlaces) (Propietario) (Grupo) (Tamaño) (Fecha) (Nombre)`
+
+La `s` de `drwxrwsr-x` es el bit *setgid* del apartado anterior.
+
+**Prueba real de la jaula**, desde una terminal del equipo anfitrión:
+
+```bash
+# Debe conectar (contraseña: paso). Dentro, "pwd" responde "/" y "ls" solo muestra httpdocs
+sftp enjaulado1@10.199.8.153
+
+# Debe ser rechazado: el usuario enjaulado no tiene acceso a la terminal
+ssh enjaulado1@10.199.8.153
+```
+
+Dentro de la sesión SFTP, `cd httpdocs` y `put archivo.html` suben un archivo; `exit` cierra la conexión.
+
+---   
+
+
+### 1.5 Ejecución PHP con PHP-FPM
 FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga de interpretar código PHP.
 
 #### Instalación
@@ -459,7 +586,7 @@ sudo nano php.ini
 sudo systemctl restart php8.5-fpm
 ```
 
-### 1.4 MariaDB
+### 1.6 MariaDB
 El gestor de base de datos que hemos escogido, compatible con PHP, es MariaDB.
 MariaDB es un sistema de gestión de bases de datos relacional, muy similar a MySQL, permitiendo almacenar, organizar y acceder a información mediante el lenguaje SQL.
 A continuación detallaremos el proceso de instalación y puesta en marcha de este servicio.
@@ -593,9 +720,9 @@ Este asistente te permitirá:
 5. Elimina la base de datos de prueba (**Sí**).
 6. Recarga los privilegios (**Sí**).
 
-### 1.5 PHPMyadmin
+### 1.7 PHPMyadmin
 
-#### Instalación
+#### Instalación-2
 
 * Se actualiza el servidor
 ```bash
@@ -606,7 +733,14 @@ sudo apt upgrade
 ```bash
 sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 ```
-Para comprobar que funciona pega esto en el navegador cambiando IP por la IP del servidor http://IP/phpmyadmin
+Para comprobar que funciona pega esto en el navegador cambiando IP por la IP del servidor http://IP/phpmyadmin    
+
+* En caso de que el enlace no funcione por la redirección a https prueba a instalar los siguientes módulos
+```bash
+sudo apt update
+sudo apt install php libapache2-mod-php php-mysql php-mbstring
+sudo systemctl restart apache2
+```
 
 **Conexión con NetBeans**\
 Ve a la pestaña services, click derecho en databases>New connection elige mariadb y pon el driver que se puede descargar aquí
